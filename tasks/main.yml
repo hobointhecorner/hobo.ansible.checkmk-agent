@@ -25,7 +25,7 @@
     do_register_agent: "{{ !(stat_agent_registered.stat.exists | bool) or (checkmk_agent_force_register | bool) }}"
   block:
     - name: Wait for host creation
-      ansible.bultin.pause:
+      pause:
         prompt: Add host(s) from the management console before continuing with registration
 
     - name: Register checkmk agent
