@@ -1,12 +1,12 @@
 ---
 - name: As user
   debug:
-    var: host_vars
+    var: hostvars
 
 - name: As root
   become: true
   debug:
-    var: host_vars
+    var: hostvars
 
 - fail:
 
