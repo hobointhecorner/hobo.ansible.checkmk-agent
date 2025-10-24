@@ -14,29 +14,28 @@
   register: stat_agent_registered
 
 - name: Register agent
-  when: (not stat_agent_registered.stat.exists | bool) || (checkmk_agent_force_register | bool)
-  ansible.builtin.block:
-    tasks:
-      - name: Wait for host creation
-        ansible.bultin.pause:
-          prompt: Add host(s) from the management console before continuing with registration
+  when: (not stat_agent_registered.stat.exists | bool) or (checkmk_agent_force_register | bool)
+  block:
+    - name: Wait for host creation
+      ansible.bultin.pause:
+        prompt: Add host(s) from the management console before continuing with registration
 
-      - name: Register checkmk agent
-        ansible.builtin.shell:
-            cmd: >-
-              cmk-agent-ctl register
-                --hostname "{{ checkmk_agent_host_hostname | mandatory(true) }}"
-                --server "{{ checkmk_agent_host_hostname | mandatory(true) }}"
-                --site "{{ checkmk_site_id | mandatory(true) }}"
-                --user "{{ checkmk_agent_registration_username | mandatory(true) }}"
-                --password "{{ checkmk_agent_registration_password | mandatory(true) }}"
-                --trust-cert
+    - name: Register checkmk agent
+      ansible.builtin.shell:
+          cmd: >-
+            cmk-agent-ctl register
+              --hostname "{{ checkmk_agent_host_hostname | mandatory(true) }}"
+              --server "{{ checkmk_agent_host_hostname | mandatory(true) }}"
+              --site "{{ checkmk_site_id | mandatory(true) }}"
+              --user "{{ checkmk_agent_registration_username | mandatory(true) }}"
+              --password "{{ checkmk_agent_registration_password | mandatory(true) }}"
+              --trust-cert
 
-      # - name: Ensure .checkmk-agent-configured file
-      #   become: true
-      #   ansible.builtin.file:
-      #     path: /.checkmk-agent-registered
-      #     owner: root
-      #     group: root
-      #     mode: "664"
-      #     state: present
+    # - name: Ensure .checkmk-agent-configured file
+    #   become: true
+    #   ansible.builtin.file:
+    #     path: /.checkmk-agent-registered
+    #     owner: root
+    #     group: root
+    #     mode: "664"
+    #     state: present
