@@ -1,16 +1,11 @@
 ---
-- name: As user
-  debug:
-    var: vars
+- debug:
+    var: hostvars[inventory_hostname]
 
-- name: As root
-  become: true
-  debug:
-    var: vars
-
-- name: As string
-  debug:
-    msg: "{{ checkmk_agent_host_protocol | mandatory(true) }}//{{ checkmk_agent_host_hostname | mandatory(true) }}:{{ checkmk_agent_host_web_port | mandatory(true) }}"
+- debug:
+    msg: |
+      hostname: {{ checkmk_agent_host_hostname }}
+      path: {{ checkmk_agent_download_path }}
 
 - fail:
 
