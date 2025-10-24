@@ -1,12 +1,6 @@
 ---
-- debug:
-    var: checkmk_agent_host_hostname
-
-- name: Stupid fucking patch because I'm a stupid fucking idiot
+- name: Set facts
   ansible.builtin.set_fact:
-    # checkmk_agent_host_hostname: "{{ hostvars[inventory_hostname]['checkmk_agent_host_hostname'] }}"
-    # checkmk_agent_download_path: "{{ hostvars[inventory_hostname]['checkmk_agent_download_path'] }}"
-    # checkmk_agent_registration_password: "{{ hostvars[inventory_hostname]['checkmk_agent_registration_password'] }}"
     checkmk_agent_hostname: >-
       {%- if 'checkmk_agent_hostname' in hostvars[inventory_hostname] -%}
       {{- hostvars[inventory_hostname]['checkmk_agent_hostname'] -}}
