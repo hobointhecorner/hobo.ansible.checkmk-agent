@@ -1,0 +1,18 @@
+name: Mirror upstream version branch
+on:
+  push:
+    branches:
+      - main
+env:
+  upstream_branch: v1
+jobs:
+  reset:
+    name: Runner
+    runs-on: ubuntu-latest
+    steps:
+      - name: Reset dev branch to main
+        uses: nicksnell/action-reset-repo@main
+        with:
+          base_branch: main
+          reset_branch: ${{ env.upstream_branch }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
