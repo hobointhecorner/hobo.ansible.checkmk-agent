@@ -1,11 +1,19 @@
 ---
-- debug:
+- name: Individual value
+  debug:
     var: hostvars[inventory_hostname]['checkmk_agent_host_hostname']
 
-- debug:
+- name: Long notation
+  debug:
     msg: |
       hostname: {{ hostvars[inventory_hostname]['checkmk_agent_host_hostname'] }}
       path: {{ hostvars[inventory_hostname]['checkmk_agent_download_path'] }}
+
+- name: Var notation
+  debug:
+    msg: |
+      hostname: {{ checkmk_agent_host_hostname }}
+      path: {{ checkmk_agent_download_path }}
 
 - fail:
 
