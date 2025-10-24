@@ -1,0 +1,61 @@
+---
+argument_specs:
+  main:
+    options:
+      #
+      # REQUIRED
+      #
+
+      checkmk_agent_hostname:
+        type: str
+        required: true
+        description: Hostname used when host is created via management console
+
+      checkmk_agent_host_hostname:
+        type: str
+        required: true
+        description: The hostname of the checkmk monitoring server
+
+      checkmk_agent_download_path:
+        type: str
+        required: true
+        description: Path to the agent package to be downloaded from the server (e.g. path after 'URL/check_mk/agents/'')
+
+      checkmk_agent_registration_password:
+        type: str
+        required: true
+        description: Password of the user to be used for agent registration
+
+      #
+      # OPTIONAL
+      #
+
+      checkmk_site_id:
+        type: str
+        default: cmk
+        description: TODO
+
+      checkmk_agent_registration_username:
+        type: str
+        default: agent_registration
+        description: TODO
+
+      checkmk_agent_force_register:
+        type: bool
+        default: false
+        description: TODO
+
+      checkmk_agent_host_protocol:
+        type: str
+        default: http
+        description: TODO
+
+      checkmk_host_port_web:
+        type: str
+        default: "5000"
+        description: TODO
+
+      checkmk_host_port_agent:
+        type: str
+        default: '8000'
+        description: TODO
