@@ -3,4 +3,5 @@ checkmk_site_id: cmk
 checkmk_agent_registration_username: agent_registration
 checkmk_agent_force_register: false
 checkmk_agent_host_protocol: http
-checkmk_agent_host_web_port: 5000
+checkmk_host_port_web: 5000
+checkmk_host_port_agent: 8000

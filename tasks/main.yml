@@ -1,15 +1,17 @@
 ---
 - name: Stupid fucking patch because I'm a stupid fucking idiot
   ansible.builtin.set_fact:
+    checkmk_agent_hostname: "{{ hostvars[inventory_hostname]['checkmk_agent_hostname'] }}"
     checkmk_agent_host_hostname: "{{ hostvars[inventory_hostname]['checkmk_agent_host_hostname'] }}"
     checkmk_agent_download_path: "{{ hostvars[inventory_hostname]['checkmk_agent_download_path'] }}"
+    checkmk_agent_registration_password: "{{ hostvars[inventory_hostname]['checkmk_agent_registration_password'] }}"
 
 - name: Install checkmk agent
   become: true
   ansible.builtin.apt:
     deb: "{{ checkmk_host_url }}/{{ checkmk_site_id | mandatory(true) }}/check_mk/agents/{{ checkmk_agent_download_path | mandatory(true) }}"
   vars:
-    checkmk_host_url: "{{ checkmk_agent_host_protocol | mandatory(true) }}://{{ checkmk_agent_host_hostname | mandatory(true) }}:{{ checkmk_agent_host_web_port | mandatory(true) }}"
+    checkmk_host_url: "{{ checkmk_agent_host_protocol | mandatory(true) }}://{{ checkmk_agent_host_hostname | mandatory(true) }}:{{ checkmk_host_port_web | mandatory(true) }}"
 
 - name: Check for .checkmk-agent-registered file
   ansible.builtin.stat:
@@ -27,7 +29,7 @@
           cmd: >-
             cmk-agent-ctl register \
               --hostname "{{ checkmk_agent_hostname | mandatory(true) }}" \
-              --server "{{ checkmk_agent_host_hostname | mandatory(true) }}:{{ checkmk_agent_host_web_port }}" \
+              --server "{{ checkmk_agent_host_hostname | mandatory(true) }}:{{ checkmk_host_port_agent}}" \
               --site "{{ checkmk_site_id | mandatory(true) }}" \
               --user "{{ checkmk_agent_registration_username | mandatory(true) }}" \
               --password "{{ checkmk_agent_registration_password | mandatory(true) }}" \
