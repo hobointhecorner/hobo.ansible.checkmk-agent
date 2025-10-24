@@ -1,4 +1,13 @@
 ---
+- become: true
+  debug: "As user: {{ ansible_facts }}"
+
+- become: true
+  debug:
+    msg: "As root: {{ ansible_facts }}"
+
+- fail:
+
 - name: Install checkmk agent
   become: true
   ansible.builtin.apt:
