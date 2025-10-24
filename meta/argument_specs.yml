@@ -6,11 +6,6 @@ argument_specs:
       # REQUIRED
       #
 
-      checkmk_agent_hostname:
-        type: str
-        required: true
-        description: Hostname used when host is created via management console
-
       checkmk_agent_host_hostname:
         type: str
         required: true
@@ -29,6 +24,10 @@ argument_specs:
       #
       # OPTIONAL
       #
+
+      checkmk_agent_hostname:
+        type: str
+        description: 'Hostname used when host is created via management console (default: inventory_hostname)'
 
       checkmk_site_id:
         type: str
