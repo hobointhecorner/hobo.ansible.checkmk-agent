@@ -13,8 +13,18 @@
     path: /.checkmk-agent-registered
   register: stat_agent_registered
 
+- debug:
+    var: stat_agent_registered
+
+- debug:
+    msg: "do_register_agent: {{ !(stat_agent_registered.stat.exists | bool) or (checkmk_agent_force_register | bool) }}"
+
+- pause:
+
 - name: Register agent
-  when: (not stat_agent_registered.stat.exists | bool) or (checkmk_agent_force_register | bool)
+  when: do_register_agent | bool
+  vars:
+    do_register_agent: "{{ !(stat_agent_registered.stat.exists | bool) or (checkmk_agent_force_register | bool) }}"
   block:
     - name: Wait for host creation
       ansible.bultin.pause:
