@@ -3,7 +3,6 @@
   ansible.builtin.set_fact:
     checkmk_agent_host_hostname: "{{ hostvars[inventory_hostname]['checkmk_agent_host_hostname'] }}"
     checkmk_agent_download_path: "{{ hostvars[inventory_hostname]['checkmk_agent_download_path'] }}"
-    do_register_agent: "{{ (not stat_agent_registered.stat.exists | bool) or (checkmk_agent_force_register | bool) }}"
 
 - name: Install checkmk agent
   become: true
@@ -19,6 +18,8 @@
 
 - name: Register agent
   when: do_register_agent | bool
+  vars:
+    do_register_agent: "{{ (not stat_agent_registered.stat.exists | bool) or (checkmk_agent_force_register | bool) }}"
   block:
     - name: Register checkmk agent
       ansible.builtin.shell:
