@@ -1,12 +1,12 @@
 ---
 - name: Set facts
   ansible.builtin.set_fact:
-    checkmk_host_url: "{{ checkmk_agent_host_protocol | mandatory }}//{{ checkmk_agent_host_hostname }}:{{ checkmk_agent_host_web_port }}"
+    checkmk_host_url: "{{ checkmk_agent_host_protocol | mandatory(true) }}//{{ checkmk_agent_host_hostname | mandatory(true) }}:{{ checkmk_agent_host_web_port | mandatory(true) }}"
 
 - name: Install checkmk agent
   become: true
   ansible.builtin.apt:
-    deb: "{{ checkmk_host_url }}/{{ checkmk_site_id }}/check_mk/agents/{{ checkmk_agent_download_path }}"
+    deb: "{{ checkmk_host_url }}/{{ checkmk_site_id | mandatory(true) }}/check_mk/agents/{{ checkmk_agent_download_path | mandatory(true) }}"
 
 - name: Check for .checkmk-agent-registered file
   ansible.builtin.stat:
@@ -24,17 +24,18 @@
       ansible.builtin.shell:
           cmd: >-
             cmk-agent-ctl register
-              --hostname "{{ checkmk_agent_host_address | mandatory(true) }}"
-              --server "{{ checkmk_agent_host_address | mandatory(true) }}"
+              --hostname "{{ checkmk_agent_host_hostname | mandatory(true) }}"
+              --server "{{ checkmk_agent_host_hostname | mandatory(true) }}"
               --site "{{ checkmk_site_id | mandatory(true) }}"
               --user "{{ checkmk_agent_registration_username | mandatory(true) }}"
               --password "{{ checkmk_agent_registration_password | mandatory(true) }}"
+              --trust-cert
 
-    - name: Ensure .checkmk-agent-configured file
-      become: true
-      ansible.builtin.file:
-        path: /.checkmk-agent-registered
-        owner: root
-        group: root
-        mode: "664"
-        state: present
+    # - name: Ensure .checkmk-agent-configured file
+    #   become: true
+    #   ansible.builtin.file:
+    #     path: /.checkmk-agent-registered
+    #     owner: root
+    #     group: root
+    #     mode: "664"
+    #     state: present
