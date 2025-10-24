@@ -4,25 +4,6 @@
     checkmk_agent_host_hostname: "{{ hostvars[inventory_hostname]['checkmk_agent_host_hostname'] }}"
     checkmk_agent_download_path: "{{ hostvars[inventory_hostname]['checkmk_agent_download_path'] }}"
 
-- name: Individual value
-  debug:
-    var: hostvars[inventory_hostname]['checkmk_agent_host_hostname']
-
-- name: Long notation
-  debug:
-    msg: |
-      hostname: {{ hostvars[inventory_hostname]['checkmk_agent_host_hostname'] }}
-      path: {{ hostvars[inventory_hostname]['checkmk_agent_download_path'] }}
-
-- name: As root
-  become: true
-  debug:
-    msg: |
-      hostname: {{ checkmk_agent_host_hostname }}
-      path: {{ checkmk_agent_download_path }}
-
-- fail:
-
 - name: Install checkmk agent
   become: true
   ansible.builtin.apt:
