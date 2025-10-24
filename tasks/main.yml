@@ -1,6 +1,6 @@
 ---
 - debug:
-    var: hostvars[inventory_hostname]
+    var: hostvars[inventory_hostname]['checkmk_agent_host_hostname']
 
 - debug:
     msg: |
