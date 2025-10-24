@@ -19,8 +19,6 @@
 - debug:
     msg: "do_register_agent: {{ !(stat_agent_registered.stat.exists | bool) or (checkmk_agent_force_register | bool) }}"
 
-- pause:
-
 - name: Register agent
   when: do_register_agent | bool
   vars:
