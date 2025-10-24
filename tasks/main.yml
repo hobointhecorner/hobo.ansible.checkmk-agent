@@ -1,8 +1,8 @@
 ---
 - name: Stupid fucking patch because I'm a stupid fucking idiot
   ansible.builtin.set_fact:
-    checkmk_agent_host_hostname: hostvars[inventory_hostname]['checkmk_agent_host_hostname']
-    checkmk_agent_download_path: hostvars[inventory_hostname]['checkmk_agent_download_path']
+    checkmk_agent_host_hostname: "{{ hostvars[inventory_hostname]['checkmk_agent_host_hostname'] }}"
+    checkmk_agent_download_path: "{{ hostvars[inventory_hostname]['checkmk_agent_download_path'] }}"
 
 - name: Individual value
   debug:
