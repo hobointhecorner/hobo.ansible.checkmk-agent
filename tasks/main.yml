@@ -26,8 +26,8 @@
       ansible.builtin.shell:
           cmd: >-
             cmk-agent-ctl register \
-              --hostname "{{ checkmk_agent_host_hostname | mandatory(true) }}" \
-              --server "{{ checkmk_agent_host_hostname | mandatory(true) }}" \
+              --hostname "{{ checkmk_agent_hostname | mandatory(true) }}" \
+              --server "{{ checkmk_agent_host_hostname | mandatory(true) }}:{{ checkmk_agent_host_web_port }}" \
               --site "{{ checkmk_site_id | mandatory(true) }}" \
               --user "{{ checkmk_agent_registration_username | mandatory(true) }}" \
               --password "{{ checkmk_agent_registration_password | mandatory(true) }}" \

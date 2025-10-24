@@ -1,4 +1,5 @@
 ---
+checkmk_agent_hostname: # Name used during host creation
 checkmk_agent_host_hostname:
 checkmk_agent_download_path:
 checkmk_agent_registration_password:
