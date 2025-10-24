@@ -1,10 +1,12 @@
 ---
-- debug:
-    msg: "As user: {{ ansible_facts }}"
-
-- become: true
+- name: As user
   debug:
-    msg: "As root: {{ ansible_facts }}"
+    var: host_vars
+
+- name: As root
+  become: true
+  debug:
+    var: host_vars
 
 - fail:
 
