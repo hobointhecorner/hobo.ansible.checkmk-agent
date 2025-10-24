@@ -9,7 +9,7 @@
   ansible.builtin.apt:
     deb: "{{ checkmk_host_url }}/{{ checkmk_site_id | mandatory(true) }}/check_mk/agents/{{ checkmk_agent_download_path | mandatory(true) }}"
   vars:
-    checkmk_host_url: "{{ checkmk_agent_host_protocol | mandatory(true) }}//{{ checkmk_agent_host_hostname | mandatory(true) }}:{{ checkmk_agent_host_web_port | mandatory(true) }}"
+    checkmk_host_url: "{{ checkmk_agent_host_protocol | mandatory(true) }}://{{ checkmk_agent_host_hostname | mandatory(true) }}:{{ checkmk_agent_host_web_port | mandatory(true) }}"
 
 - name: Check for .checkmk-agent-registered file
   ansible.builtin.stat:
