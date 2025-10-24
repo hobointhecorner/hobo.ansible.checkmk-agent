@@ -1,10 +1,15 @@
 ---
 - name: Stupid fucking patch because I'm a stupid fucking idiot
   ansible.builtin.set_fact:
-    checkmk_agent_hostname: "{{ hostvars[inventory_hostname]['checkmk_agent_hostname'] }}"
     checkmk_agent_host_hostname: "{{ hostvars[inventory_hostname]['checkmk_agent_host_hostname'] }}"
     checkmk_agent_download_path: "{{ hostvars[inventory_hostname]['checkmk_agent_download_path'] }}"
     checkmk_agent_registration_password: "{{ hostvars[inventory_hostname]['checkmk_agent_registration_password'] }}"
+    checkmk_agent_hostname: >-
+      {%- if hostvars[inventory_hostname]['checkmk_agent_hostname'] != "" -%}
+      {{- hostvars[inventory_hostname]['checkmk_agent_hostname'] -}}
+      {%- else -%}
+      {{- inventory_hostname -}}
+      {%- endif -%}
 
 - name: Install checkmk agent
   become: true
