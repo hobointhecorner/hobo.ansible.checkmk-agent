@@ -8,6 +8,10 @@
   debug:
     var: vars
 
+- name: As string
+  debug:
+    msg: "{{ checkmk_agent_host_protocol | mandatory(true) }}//{{ checkmk_agent_host_hostname | mandatory(true) }}:{{ checkmk_agent_host_web_port | mandatory(true) }}"
+
 - fail:
 
 - name: Install checkmk agent
