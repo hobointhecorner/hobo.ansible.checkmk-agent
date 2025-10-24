@@ -1,6 +1,6 @@
 ---
-- become: true
-  debug: "As user: {{ ansible_facts }}"
+- debug:
+    msg: "As user: {{ ansible_facts }}"
 
 - become: true
   debug:
