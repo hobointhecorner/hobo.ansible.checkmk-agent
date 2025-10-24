@@ -14,7 +14,8 @@
       hostname: {{ hostvars[inventory_hostname]['checkmk_agent_host_hostname'] }}
       path: {{ hostvars[inventory_hostname]['checkmk_agent_download_path'] }}
 
-- name: Var notation
+- name: As root
+  become: true
   debug:
     msg: |
       hostname: {{ checkmk_agent_host_hostname }}
