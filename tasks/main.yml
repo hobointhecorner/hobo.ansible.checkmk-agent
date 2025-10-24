@@ -24,12 +24,12 @@
     - name: Register checkmk agent
       ansible.builtin.shell:
           cmd: >-
-            cmk-agent-ctl register
-              --hostname "{{ checkmk_agent_host_hostname | mandatory(true) }}"
-              --server "{{ checkmk_agent_host_hostname | mandatory(true) }}"
-              --site "{{ checkmk_site_id | mandatory(true) }}"
-              --user "{{ checkmk_agent_registration_username | mandatory(true) }}"
-              --password "{{ checkmk_agent_registration_password | mandatory(true) }}"
+            cmk-agent-ctl register \
+              --hostname "{{ checkmk_agent_host_hostname | mandatory(true) }}" \
+              --server "{{ checkmk_agent_host_hostname | mandatory(true) }}" \
+              --site "{{ checkmk_site_id | mandatory(true) }}" \
+              --user "{{ checkmk_agent_registration_username | mandatory(true) }}" \
+              --password "{{ checkmk_agent_registration_password | mandatory(true) }}" \
               --trust-cert
 
     # - name: Ensure .checkmk-agent-configured file
