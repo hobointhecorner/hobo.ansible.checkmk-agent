@@ -43,7 +43,7 @@
         owner: root
         group: root
         mode: "664"
-        state: present
+        state: file
 
     - name: Configure docker plugin
       when: checkmk_plugin_docker_enabled | bool
