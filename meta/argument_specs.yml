@@ -58,3 +58,8 @@ argument_specs:
         type: str
         default: '8000'
         description: TODO
+
+      checkmk_plugin_docker_enabled:
+        type: bool
+        default: false
+        description: TODO

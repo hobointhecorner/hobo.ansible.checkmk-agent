@@ -5,3 +5,4 @@ checkmk_agent_force_register: false
 checkmk_agent_host_protocol: http
 checkmk_host_port_web: 5000
 checkmk_host_port_agent: 8000
+checkmk_plugin_docker_enabled: false
