@@ -40,10 +40,11 @@
       become: true
       ansible.builtin.file:
         path: /.checkmk-agent-registered
+        create: true
         owner: root
         group: root
         mode: "664"
-        state: file
+        state: touch
 
     - name: Configure docker plugin
       when: checkmk_plugin_docker_enabled | bool
