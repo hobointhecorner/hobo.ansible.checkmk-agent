@@ -26,7 +26,7 @@
   block:
     - name: Pause for host creation
       ansible.builtin.pause:
-        prompt: Create hosts in the management console before continuing
+        prompt: Create hosts in the management console, then press enter
 
     - name: Register checkmk agent
       become: true
