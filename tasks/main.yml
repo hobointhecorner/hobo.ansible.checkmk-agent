@@ -2,9 +2,6 @@
 - name: Set facts
   ansible.builtin.set_fact:
     checkmk_host_url: "{{ checkmk_agent_host_protocol | mandatory(true) }}://{{ checkmk_agent_host_hostname | mandatory(true) }}:{{ checkmk_host_port_web | mandatory(true) }}"
-    checkmk_agent_registered_file:
-      linux: /.checkmk-agent-registered
-      windows: "{{ ansible_env['ProgramFiles(x86)'] }}\\checkmk\\.checkmk-agent-registered"
     checkmk_agent_hostname: >-
       {%- if 'checkmk_agent_hostname' in hostvars[inventory_hostname] -%}
       {{- hostvars[inventory_hostname]['checkmk_agent_hostname'] -}}
@@ -15,10 +12,14 @@
 - name: Configure linux agent
   when: ansible_system | lower == 'linux'
   ansible.builtin.include_tasks: tasks/os-linux.yml
+  vars:
+    checkmk_agent_registered_file: /.checkmk-agent-registered
 
 - name: Configure windows agent
   when: ansible_system | lower == 'windows'
   ansible.builtin.include_tasks: tasks/os-windows.yml
+  vars:
+    checkmk_agent_registered_file: "{{ ansible_env['ProgramFiles(x86)'] }}\\checkmk\\.checkmk-agent-registered"
 
 - name: Configure docker plugin
   when: checkmk_plugin_docker_enabled | bool

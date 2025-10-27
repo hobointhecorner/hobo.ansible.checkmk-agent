@@ -17,7 +17,7 @@
 
 - name: Check for .checkmk-agent-registered file
   ansible.builtin.stat:
-    path: "{{ checkmk_agent_registered_file.linux }}"
+    path: "{{ checkmk_agent_registered_file }}"
   register: stat_agent_registered
 
 - name: Register agent
@@ -42,7 +42,7 @@
     - name: Ensure .checkmk-agent-configured file
       become: true
       ansible.builtin.file:
-        path: "{{ checkmk_agent_registered_file.linux }}"
+        path: "{{ checkmk_agent_registered_file }}"
         owner: root
         group: root
         mode: "664"

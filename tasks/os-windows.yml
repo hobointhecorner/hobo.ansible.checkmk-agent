@@ -1,12 +1,12 @@
 ---
 - name: Install checkmk agent
   become: true
-  ansible.builtin.win_package:
+  ansible.windows.win_package:
     path: "{{ checkmk_host_url }}/{{ checkmk_site_id | mandatory(true) }}/check_mk/agents/{{ checkmk_agent_download_path | mandatory(true) }}"
 
 - name: Check for .checkmk-agent-registered file
-  ansible.builtin.win_stat:
-    path: "{{ checkmk_agent_registered_file.windows }}"
+  ansible.windows.win_stat:
+    path: "{{ checkmk_agent_registered_file }}"
   register: stat_agent_registered
 
 - name: Register agent
@@ -14,7 +14,7 @@
   block:
     - name: Register checkmk agent
       become: true
-      ansible.builtin.win_shell:
+      ansible.windows.win_shell:
           chdir: "{{ ansible_env['ProgramFiles(x86)'] }}\\checkmk\\service"
           cmd: >-
             ./cmk-agent-ctl.exe register \
@@ -27,6 +27,6 @@
 
     - name: Ensure .checkmk-agent-configured file
       become: true
-      ansible.builtin.win_file:
-        path: "{{ checkmk_agent_registered_file.windows }}"
+      ansible.windows.win_file:
+        path: "{{ checkmk_agent_registered_file }}"
         state: touch
