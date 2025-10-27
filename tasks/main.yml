@@ -2,6 +2,9 @@
 - name: Set facts
   ansible.builtin.set_fact:
     checkmk_host_url: "{{ checkmk_agent_host_protocol | mandatory(true) }}://{{ checkmk_agent_host_hostname | mandatory(true) }}:{{ checkmk_host_port_web | mandatory(true) }}"
+    checkmk_agent_registered_file:
+      linux: /.checkmk-agent-registered
+      windows: "{{ ansible_env['ProgramFiles(x86)'] }}\\checkmk\\.checkmk-agent-registered"
     checkmk_agent_hostname: >-
       {%- if 'checkmk_agent_hostname' in hostvars[inventory_hostname] -%}
       {{- hostvars[inventory_hostname]['checkmk_agent_hostname'] -}}
@@ -9,46 +12,14 @@
       {{- inventory_hostname -}}
       {%- endif -%}
 
-- name: Install checkmk agent
-  become: true
-  ansible.builtin.apt:
-    deb: "{{ checkmk_host_url }}/{{ checkmk_site_id | mandatory(true) }}/check_mk/agents/{{ checkmk_agent_download_path | mandatory(true) }}"
+- name: Configure linux agent
+  when: ansible_system | lower == 'linux'
+  ansible.builtin.include_tasks: tasks/os-linux.yml
 
-- name: Check for .checkmk-agent-registered file
-  ansible.builtin.stat:
-    path: /.checkmk-agent-registered
-  register: stat_agent_registered
+- name: Configure windows agent
+  when: ansible_system | lower == 'windows'
+  ansible.builtin.include_tasks: tasks/os-windows.yml
 
-- name: Register agent
-  when: do_register_agent | bool
-  vars:
-    do_register_agent: "{{ (not stat_agent_registered.stat.exists | bool) or (checkmk_agent_force_register | bool) }}"
-  block:
-    - name: Pause for host creation
-      ansible.builtin.pause:
-        prompt: Create hosts in the management console, then press enter
-
-    - name: Register checkmk agent
-      become: true
-      ansible.builtin.shell:
-          cmd: >-
-            cmk-agent-ctl register \
-              --hostname "{{ checkmk_agent_hostname | mandatory(true) }}" \
-              --server "{{ checkmk_agent_host_hostname | mandatory(true) }}:{{ checkmk_host_port_agent}}" \
-              --site "{{ checkmk_site_id | mandatory(true) }}" \
-              --user "{{ checkmk_agent_registration_username | mandatory(true) }}" \
-              --password "{{ checkmk_agent_registration_password | mandatory(true) }}" \
-              --trust-cert
-
-    - name: Ensure .checkmk-agent-configured file
-      become: true
-      ansible.builtin.file:
-        path: /.checkmk-agent-registered
-        owner: root
-        group: root
-        mode: "664"
-        state: touch
-
-    - name: Configure docker plugin
-      when: checkmk_plugin_docker_enabled | bool
-      ansible.builtin.include_tasks: tasks/plugin-docker.yml
+- name: Configure docker plugin
+  when: checkmk_plugin_docker_enabled | bool
+  ansible.builtin.include_tasks: tasks/plugin-docker.yml

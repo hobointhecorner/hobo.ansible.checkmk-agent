@@ -1,0 +1,49 @@
+---
+- name: Install and configure linux agent
+  vars:
+    checkmk_agent_package_url: "{{ checkmk_host_url }}/{{ checkmk_site_id | mandatory(true) }}/check_mk/agents/{{ checkmk_agent_download_path | mandatory(true) }}"
+  block:
+    - name: Install debian checkmk agent
+      when: ansible_os_family | lower == 'debian'
+      become: true
+      ansible.builtin.apt:
+        deb: "{{ checkmk_agent_package_url }}"
+
+    - name: Install redhat checkmk agent
+      when: ansible_os_family | lower == 'redhat'
+      become: true
+      ansible.builtin.yum:
+        name: "{{ checkmk_agent_package_url }}"
+
+- name: Check for .checkmk-agent-registered file
+  ansible.builtin.stat:
+    path: "{{ checkmk_agent_registered_file.linux }}"
+  register: stat_agent_registered
+
+- name: Register agent
+  when: (not stat_agent_registered.stat.exists | bool) or (checkmk_agent_force_register | bool)
+  block:
+    - name: Pause for host creation
+      ansible.builtin.pause:
+        prompt: Create hosts in the management console, then press enter
+
+    - name: Register checkmk agent
+      become: true
+      ansible.builtin.shell:
+          cmd: >-
+            cmk-agent-ctl register \
+              --hostname "{{ checkmk_agent_hostname | mandatory(true) }}" \
+              --server "{{ checkmk_agent_host_hostname | mandatory(true) }}:{{ checkmk_host_port_agent}}" \
+              --site "{{ checkmk_site_id | mandatory(true) }}" \
+              --user "{{ checkmk_agent_registration_username | mandatory(true) }}" \
+              --password "{{ checkmk_agent_registration_password | mandatory(true) }}" \
+              --trust-cert
+
+    - name: Ensure .checkmk-agent-configured file
+      become: true
+      ansible.builtin.file:
+        path: "{{ checkmk_agent_registered_file.linux }}"
+        owner: root
+        group: root
+        mode: "664"
+        state: touch
