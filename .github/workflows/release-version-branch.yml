@@ -19,7 +19,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
   make-release:
-    name: Get version info
+    name: Create release
     runs-on: ubuntu-latest
     env:
       changelog_path: CHANGELOG.md
