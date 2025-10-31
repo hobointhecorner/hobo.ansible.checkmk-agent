@@ -43,6 +43,7 @@ jobs:
           convco changelog \
             --output $changelog_path \
             --unreleased $new_version \
+            --include-hidden-sections \
             --max-versions 1
 
           echo "Current version: $current_version"
