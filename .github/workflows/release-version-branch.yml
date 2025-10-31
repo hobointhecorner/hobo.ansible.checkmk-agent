@@ -1,0 +1,79 @@
+name: Make release
+on:
+  push:
+   branches:
+    - main
+env:
+  base_branch: main
+  upstream_branch: v1
+jobs:
+  reset:
+    name: Reset version branch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Reset upstream branch to main
+        uses: nicksnell/action-reset-repo@master
+        with:
+          base_branch: ${{ env.base_branch }}
+          reset_branch: ${{ env.upstream_branch }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  make-release:
+    name: Get version info
+    runs-on: ubuntu-latest
+    env:
+      changelog_path: CHANGELOG.md
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Convco init
+        uses: convco/convco-action@v0.2.0
+
+      - name: Get version info
+        id: convco
+        run: |
+          export current_version="$(convco version --print-prefix)"
+          export new_version="$(convco version --bump --print-prefix)"
+          export changelog="$(convco changelog)"
+          [ "$current_version" != "$new_version" ] && export make_release='true' || export make_release='false'
+
+          convco changelog \
+            --output $changelog_path \
+            --unreleased $new_version \
+            --max-versions 1
+
+          echo "Current version: $current_version"
+          echo "New Version: $new_version"
+          echo "Make release: $make_release"
+          echo -e "\nChangelog:\n$(cat $changelog_path)"
+
+          echo "current_version=${current_version}" >> $GITHUB_OUTPUT
+          echo "new_version=${new_version}" >> $GITHUB_OUTPUT
+          echo "changelog_path=${changelog_path}" >> $GITHUB_OUTPUT
+          echo "make_release=${make_release}" >> $GITHUB_OUTPUT
+
+      - name: debug
+        if: ${{ steps.convco.outputs.make_release == 'true' }}
+        env:
+          current_version: ${{ steps.convco.outputs.current_version }}
+          new_version: ${{ steps.convco.outputs.new_version }}
+          make_release: ${{ steps.convco.outputs.make_release }}
+          changelog_path: ${{ steps.convco.outputs.changelog_path }}
+        run: |
+          echo "Current version: $current_version"
+          echo "New Version: $new_version"
+          echo "Changelog: $changelog_path"
+          echo "Make release: $make_release"
+
+      - name: Release
+        uses: comnoco/create-release-action@v2.0.5
+        if: ${{ steps.convco.outputs.make_release == 'true' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{steps.convco.outputs.new_version}}
+          release_name: ${{steps.convco.outputs.new_version}}
+          body_path: ${{steps.convco.outputs.changelog_path}}
