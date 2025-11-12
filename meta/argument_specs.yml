@@ -63,3 +63,8 @@ argument_specs:
         type: bool
         default: false
         description: TODO
+
+      checkmk_plugin_smart_enabled:
+        type: bool
+        default: false
+        description: TODO

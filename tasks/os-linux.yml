@@ -47,3 +47,11 @@
         group: root
         mode: "664"
         state: touch
+
+- name: Configure docker plugin
+  when: checkmk_plugin_docker_enabled | bool
+  ansible.builtin.include_tasks: tasks/plugin-docker.yml
+
+- name: Configure smart plugin
+  when: checkmk_plugin_smart_enabled | bool
+  ansible.builtin.include_tasks: tasks/plugin-smart.yml

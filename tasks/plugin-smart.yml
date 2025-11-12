@@ -1,0 +1,14 @@
+---
+- name: Ensure smart plugin prerequisite package(s)
+  become: true
+  ansible.builtin.package:
+    name: smartmontools
+
+- name: Ensure smart plugin present
+  become: true
+  ansible.builtin.get_url:
+    url: "{{ checkmk_host_url }}/cmk/check_mk/agents/plugins/smart"
+    dest: /usr/lib/check_mk_agent/plugins/mk_docker.py
+    owner: root
+    group: root
+    mode: "755"

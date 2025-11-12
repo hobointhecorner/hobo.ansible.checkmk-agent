@@ -20,7 +20,3 @@
   ansible.builtin.include_tasks: tasks/os-windows.yml
   vars:
     checkmk_agent_registered_file: "{{ ansible_env['ProgramFiles(x86)'] }}\\checkmk\\.checkmk-agent-registered"
-
-- name: Configure docker plugin
-  when: checkmk_plugin_docker_enabled | bool
-  ansible.builtin.include_tasks: tasks/plugin-docker.yml
